@@ -22,14 +22,30 @@ This repository provides a comprehensive setup for deploying Apache Airflow usin
     brew install helm
     helm version
     ```
-3. ArgoCD with Helm - Install ArgoCD with Helm:
+3. ArgoCD - Install ArgoCD with Brew
     ```
-    helm repo add argo https://argoproj.github.io/argo-helm
-    helm install argocd argo/argo-cd
+    brew install argocd
     ```
 
 ### Argo CD Setup
+1. Create a namespace
+    ```
+    kubectl create namespace argocd
+    ```
+2. Apply default stable version Argo CD
+    ```
+    kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+    ```
+3. Serve the Argo CD locally with default url https://localhost:8080/
+    ```
+    kubectl port-forward svc/argocd-server -n argocd 8080:443
+    ```
+4. login with `admin` user and password from kube command 
+    ```
+    kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+    ```
 
+***Notes:** to output the file with `--dry-run=client -o yaml>file_name.yml`*
 
 ### Airflow Deployment
 1. Update Airflow Helm values (Optional)
@@ -38,3 +54,11 @@ This repository provides a comprehensive setup for deploying Apache Airflow usin
     docker build -f infra/docker/apache-airflow/Dockerfile -t airflow-demo:apache-airflow-2.9.1-python3.10 .
     ```
 3. Deploy Airflow with Argo CD:
+
+## References
+- [Apache Airflow](https://airflow.apache.org/)
+- [Apache Airflow Helm Chart](https://airflow.apache.org/docs/helm-chart/stable/index.html)
+- [Helm Cheat Sheet](https://helm.sh/docs/intro/cheatsheet/)
+- [ArgoCD Deployment](https://argo-cd.readthedocs.io/en/stable/getting_started/)
+- [Kubectl Commands](https://jamesdefabia.github.io/docs/user-guide/kubectl/kubectl/)
+- [Docker Commands](https://docs.docker.com/reference/cli/docker/)
