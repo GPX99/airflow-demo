@@ -1,0 +1,16 @@
+apiVersion: v2
+name: airflow-addons
+version: 1.0.0
+description: The Helm chart to deploy external secrets and other components to Apache Airflow
+home: https://github.com/GPX99/airflow-demo/tree/master/charts
+sources:
+  - https://github.com/apache/airflow
+  - https://github.com/GPX99/airflow-demo/tree/master/charts
+keywords:
+  - apache
+  - airflow
+  - external-secrets
+  - data-engineering
+maintainers:
+  - name: GPX99
+type: application
