@@ -11,15 +11,24 @@ spec:
   syncPolicy:
     syncOptions:
       - ServerSideApply=true
+      # - CreateNamespace=true
+    # automated:
+    #   selfHeal: true
+    #   prune: true
+    # ignoreDifferences:
+    #   - group: monitoring.coreos.com
+    #     kind: ServiceMonitor
+    #     jqPathExpressions:
+    #       - .metadata.annotations
   destination:
     namespace: airflow
-    server: {{ .Values.cluster }}
-  project: {{ .Values.project }}
+    server: https://kubernetes.default.svc
+  project: default
   sources:
-    - repoURL: https://github.com/GPX99/airflow-demo
+    - repoURL: https://github.com/GPX99/airflow-demo.git
       targetRevision: HEAD
       ref: values # to use $values variable
-    - repoURL: https://github.com/apache/airflow
+    - repoURL: https://github.com/apache/airflow.git
       path: chart
       targetRevision: helm-chart/1.13.1
       helm:
@@ -27,7 +36,7 @@ spec:
         valueFiles:
         - values.yaml
         - $values/charts/demo-values.yaml
-    - repoURL: https://github.com/GPX99/airflow-demo
+    - repoURL: https://github.com/GPX99/airflow-demo.git
       path: charts
       targetRevision: HEAD
       helm:
