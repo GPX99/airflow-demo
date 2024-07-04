@@ -5,7 +5,7 @@ from airflow import DAG
 
 
 DOC_MD = """
-This is to test max_active_tasks
+This is to test bash operator with kubernetes executor
 """
 
 DAG_ID = Path(__file__).stem

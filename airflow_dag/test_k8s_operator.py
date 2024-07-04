@@ -7,7 +7,7 @@ from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
 
 
 DOC_MD = """
-This is to test max_active_tasks
+This is to test kubernetes operator with celery executor
 """
 
 DAG_ID = Path(__file__).stem
