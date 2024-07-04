@@ -93,7 +93,8 @@ This repository provides a comprehensive setup for deploying Apache Airflow usin
 
 4. Deploy Airflow Helm with Argo CD
     ```
-    argocd app create airflow-demo --file /Users/pgoh/Documents/GitHub/airflow-demo/infra/argocd/demo-airflow.yaml
+    cd infra/argocd
+    argocd app create demo-airflow --file demo-airflow.yaml
     ```
 
 ## References

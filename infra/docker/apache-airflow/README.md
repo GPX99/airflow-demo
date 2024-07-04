@@ -2,6 +2,9 @@
 
 To use `statsd_datadog_enabled`, require to install the datadog package
 
-Once you generated the new image, please get the image tag from the build log and replace in airflow and restart the airflow service.
+Docker Build Airflow custom image with the following command:
+```
+docker build -f infra/docker/apache-airflow/Dockerfile -t <name>:<tag> .
+```
 
-The image tag is based on epoch time which can be decode on https://www.epochconverter.com/
+Once you generated the new image, please replace `<name>:<tag>` in demo-values and restart the airflow service.
