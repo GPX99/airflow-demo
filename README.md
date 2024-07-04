@@ -88,7 +88,7 @@ This repository provides a comprehensive setup for deploying Apache Airflow usin
     echo -n "redis://:$REDIS_PASSWORD@k8s_redis_deployment_name:6379/0" > temp/broker-connection-url
 
     kubectl create namespace airflow
-    kubectl create secret generic airflow-secret -n airflow --from-file=FERNET_KEY=temp/fernet-key --from-file=METADATA_CONNECTION_URL=temp/metadata-connection-url --from-file=REDIS_PASSWORD=temp/redis-password --from-file=BROKER_CONNECTION_URL=temp/broker-connection-url --from-file=WEBSERVER_SECRET_KEY=temp/webserver-secret-key
+    kubectl create secret generic demo-airflow-secret -n airflow --from-file=FERNET_KEY=temp/fernet-key --from-file=METADATA_CONNECTION_URL=temp/metadata-connection-url --from-file=REDIS_PASSWORD=temp/redis-password --from-file=BROKER_CONNECTION_URL=temp/broker-connection-url --from-file=WEBSERVER_SECRET_KEY=temp/webserver-secret-key
     ```
 
 4. Deploy Airflow Helm with Argo CD
