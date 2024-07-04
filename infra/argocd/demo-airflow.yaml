@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo-airflow
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "8"
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  syncPolicy:
+    syncOptions:
+      - ServerSideApply=true
+  destination:
+    namespace: airflow
+    server: {{ .Values.cluster }}
+  project: {{ .Values.project }}
+  sources:
+    - repoURL: https://github.com/GPX99/airflow-demo
+      targetRevision: HEAD
+      ref: values # to use $values variable
+    - repoURL: https://github.com/apache/airflow
+      path: chart
+      targetRevision: helm-chart/1.13.1
+      helm:
+        releaseName: demo-airflow
+        valueFiles:
+        - values.yaml
+        - $values/charts/demo-values.yaml
+    - repoURL: https://github.com/GPX99/airflow-demo
+      path: charts
+      targetRevision: HEAD
+      helm:
+        releaseName: demo-airflow
+        valueFiles:
+        - demo-values.yaml

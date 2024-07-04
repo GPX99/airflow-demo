@@ -36,9 +36,9 @@ This repository provides a comprehensive setup for deploying Apache Airflow usin
     ```
     kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
     ```
-3. Serve the Argo CD locally with default url https://localhost:8080/
+3. Serve the Argo CD locally with default url https://localhost:8081/
     ```
-    kubectl port-forward svc/argocd-server -n argocd 8080:443
+    kubectl port-forward svc/argocd-server -n argocd 8081:443
     ```
 4. login with `admin` user and password from kube command 
     ```
@@ -48,12 +48,53 @@ This repository provides a comprehensive setup for deploying Apache Airflow usin
 ***Notes:** to output the file with `--dry-run=client -o yaml>file_name.yml`*
 
 ### Airflow Deployment
-1. Update Airflow Helm values (Optional)
-2. Build Airflow custom image (Optional):
+1. (Optional) Update Airflow Helm values and verify the values:
+    ```
+    cd charts
+    helm template demo-airflow . -f demo-values.yaml --namespace airflow --debug > rendered.yaml
+    ```
+2. (Optional) Build Airflow custom image:
     ```
     docker build -f infra/docker/apache-airflow/Dockerfile -t airflow-demo:apache-airflow-2.9.1-python3.10 .
     ```
-3. Deploy Airflow with Argo CD:
+3. (Optional) External Secret Set Up:
+    ```
+    argocd login 127.0.0.1:8081
+
+    argocd app create external-secrets \
+    --repo https://charts.external-secrets.io \
+    --helm-chart external-secrets \
+    --revision 0.9.19 \
+    --dest-namespace external-secrets \
+    --sync-option CreateNamespace=true \
+    --dest-server https://kubernetes.default.svc
+    ```
+    
+    What you need:
+    1. new fernet key (defined by you)
+    2. new webserver key (defined by you)
+    3. new PostgreSQL connection (local or cloud)
+    4. new redis password (defined by you)
+    5. broker URL redis://:$REDIS_PASSWORD@k8s_redis_deployment_name:6379/0
+    
+    ***Tips:** Use [this](https://fernetkeygen.com/) to generate the keys and passwords.*
+    
+    Kubernetes Secret Store Set Up:
+    ```
+    echo -n "new_fernet_key" > temp/fernet-key
+    echo -n "new_webserver_key" > temp/webserver-secret-key
+    echo -n "new_postgres_connection" > temp/metadata-connection-url
+    echo -n "new_redis_password" > temp/redis-password
+    echo -n "redis://:$REDIS_PASSWORD@k8s_redis_deployment_name:6379/0" > temp/broker-connection-url
+
+    kubectl create namespace airflow
+    kubectl create secret generic airflow-secret -n airflow --from-file=FERNET_KEY=temp/fernet-key --from-file=METADATA_CONNECTION_URL=temp/metadata-connection-url --from-file=REDIS_PASSWORD=temp/redis-password --from-file=BROKER_CONNECTION_URL=temp/broker-connection-url --from-file=WEBSERVER_SECRET_KEY=temp/webserver-secret-key
+    ```
+
+4. Deploy Airflow Helm with Argo CD
+    ```
+    argocd app create airflow-demo --file /Users/pgoh/Documents/GitHub/airflow-demo/infra/argocd/demo-airflow.yaml
+    ```
 
 ## References
 - [Apache Airflow](https://airflow.apache.org/)
