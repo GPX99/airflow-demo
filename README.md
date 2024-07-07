@@ -107,10 +107,46 @@ This repository provides a comprehensive setup for deploying Apache Airflow usin
     kubectl delete namesapce argocd
     ```
 
+## Extra Resources
+### How-to Set Up OAuth
+1. [Flask AppBuilder Example Code](https://github.com/dpgaspar/Flask-AppBuilder/blob/master/examples/oauth/config.py)
+2. [Flask AppBuilder Supported OAuth](https://flask-appbuilder.readthedocs.io/en/latest/security.html)
+3. [Flask AppBuilder Configuration](https://flask-appbuilder.readthedocs.io/en/latest/config.html)
+
+### How-to Use ALB Ingress
+1. [AWS ALB Ingress](https://github.com/apache/airflow/issues/16010#issuecomment-846557324)
+
+### How-to Integrate with Datadog
+1. Under config > metrics in the values.yaml as below shown
+    ```
+    config:
+    metrics:
+        statsd_on: '{{ ternary "True" "False" .Values.statsd.enabled }}'
+        statsd_port: 8125
+        statsd_prefix: demo_airflow
+        statsd_host: '{{ printf "%s-statsd" .Release.Name }}'
+        statsd_datadog_enabled: 'True'
+    ```
+    *Please update the statsd_prefix to your desired prefix*
+
+    Based on the [test code here](https://github.com/apache/airflow/blob/2.5.3/tests/core/test_stats.py#L204), when statsd_datadog_enabled is True, whether statsd_on is set to True or False, only DataDog stats will be sent.
+2. Add the statsd_host in extraEnv for all airflow containers, this is because status.hostIP cannot be directly set in the config part
+    ```
+    extraEnv: |-
+      - name: AIRFLOW__METRICS__STATSD_HOST
+        valueFrom:
+          fieldRef:
+            fieldPath: status.hostIP
+    ```
+3. Install the DataDog python package to the airflow image, e.g. [dockerfile](infra/docker/apache-airflow/Dockerfile)
+4. Update the Datadog Agent main configuration file datadog.yaml as mentioned [here](https://docs.datadoghq.com/integrations/airflow/?tab=host)
+
 ## References
 - [Apache Airflow](https://airflow.apache.org/)
 - [Apache Airflow Helm Chart](https://airflow.apache.org/docs/helm-chart/stable/index.html)
+- [Apache Airflow Configuration](https://airflow.apache.org/docs/apache-airflow/2.5.3/configurations-ref.html#statsd-datadog-enabled)
 - [Helm Cheat Sheet](https://helm.sh/docs/intro/cheatsheet/)
 - [ArgoCD Deployment](https://argo-cd.readthedocs.io/en/stable/getting_started/)
 - [Kubectl Commands](https://jamesdefabia.github.io/docs/user-guide/kubectl/kubectl/)
 - [Docker Commands](https://docs.docker.com/reference/cli/docker/)
+- [Airflow with DataDog StatsD](https://docs.datadoghq.com/integrations/airflow/?tab=host)

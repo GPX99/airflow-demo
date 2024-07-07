@@ -257,12 +257,14 @@ env: []
 
 # Volumes for all airflow containers
 volumes: []
+# mount local dags directory to the container
   # - name: dags
   #   hostPath:
   #     path: "/Users/pgoh/Documents/GitHub/airflow-demo/airflow_dag"  # For you this is something like /<absolute-path>/etl-series/dags
 
 # VolumeMounts for all airflow containers
 volumeMounts: []
+# mount local dags directory to the container
   # - name: dags
   #   mountPath: /opt/airflow/dags  # location in the container it will put the directory mentioned below.
 
@@ -331,6 +333,13 @@ extraConfigMaps: {}
 # a string is expected (can be templated).
 # TODO: difference from `env`? This is a templated string. Probably should template `env` and remove this.
 extraEnv: ~
+# Statsd datadog set up
+# extraEnv: |-
+#   - name: AIRFLOW__METRICS__STATSD_HOST
+#     valueFrom:
+#       fieldRef:
+#         fieldPath: status.hostIP
+
 # eg:
 # extraEnv: |
 #   - name: AIRFLOW__CORE__LOAD_EXAMPLES
@@ -1882,7 +1891,7 @@ config:
     statsd_port: 8125
     statsd_prefix: airflow
     statsd_host: '{{ printf "%s-statsd" .Release.Name }}'
-    statsd_datadog_enabled: 'True'
+    statsd_datadog_enabled: 'False'
   webserver:
     enable_proxy_fix: 'True'
     # For Airflow 1.10
