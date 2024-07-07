@@ -256,15 +256,15 @@ env: []
 #   value: ""
 
 # Volumes for all airflow containers
-volumes:
-  - name: dags
-    hostPath:
-      path: "/Users/pgoh/Documents/GitHub/airflow-demo/airflow_dag"  # For you this is something like /<absolute-path>/etl-series/dags
+volumes: []
+  # - name: dags
+  #   hostPath:
+  #     path: "/Users/pgoh/Documents/GitHub/airflow-demo/airflow_dag"  # For you this is something like /<absolute-path>/etl-series/dags
 
 # VolumeMounts for all airflow containers
-volumeMounts:
-  - name: dags
-    mountPath: /opt/airflow/dags  # location in the container it will put the directory mentioned below.
+volumeMounts: []
+  # - name: dags
+  #   mountPath: /opt/airflow/dags  # location in the container it will put the directory mentioned below.
 
 # Secrets for all airflow containers
 secret: []
@@ -1982,7 +1982,7 @@ dags:
     ## optional subpath for dag volume mount
     subPath: ~
   gitSync:
-    enabled: false
+    enabled: true
 
     # git repo clone url
     # ssh example: git@github.com:apache/airflow.git
