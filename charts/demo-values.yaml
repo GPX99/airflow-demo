@@ -1884,11 +1884,9 @@ config:
     statsd_host: '{{ printf "%s-statsd" .Release.Name }}'
     statsd_datadog_enabled: 'True'
   webserver:
-    access_logfile: '/dev/null'
     enable_proxy_fix: 'True'
     # For Airflow 1.10
     rbac: 'True'
-    base_url: "https://localhost:{{ .Values.ports.airflowUI }}"
   celery:
     flower_url_prefix: ''
     worker_concurrency: 8
