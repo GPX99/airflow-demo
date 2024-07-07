@@ -28,8 +28,5 @@ with DAG(
 ) as dag:
     BashOperator(
         task_id="bash_task",
-        cmds=[
-            "echo",
-            "this is bash operator",
-        ]
+        bash_command="echo this is bash operator",
     )

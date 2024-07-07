@@ -91,10 +91,16 @@ This repository provides a comprehensive setup for deploying Apache Airflow usin
     kubectl create secret generic demo-airflow-secret -n airflow --from-file=FERNET_KEY=temp/fernet-key --from-file=METADATA_CONNECTION_URL=temp/metadata-connection-url --from-file=REDIS_PASSWORD=temp/redis-password --from-file=BROKER_CONNECTION_URL=temp/broker-connection-url --from-file=WEBSERVER_SECRET_KEY=temp/webserver-secret-key
     ```
 
-4. Deploy Airflow Helm with Argo CD
+4. Deploy Airflow Helm with Argo CD and serve the Airflow webserver with default url https://127.0.0.1:8080/
     ```
     cd infra/argocd
     argocd app create demo-airflow --file demo-airflow.yaml
+    kubectl port-forward svc/demo-airflow-webserver 8080:8080 --namespace airflow
+    ```
+
+5. Clean up
+    ```
+    argocd app delete demo-airflow --cascade
     ```
 
 ## References

@@ -29,8 +29,5 @@ with DAG(
     BashOperator(
         task_id="bash_task_with_k8s_executor",
         queue="kubernetes",
-        cmds=[
-            "echo",
-            "this is bash operator with k8s executor",
-        ],
+        bash_command="echo this is bash operator with k8s executor",
     )
