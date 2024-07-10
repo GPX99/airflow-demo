@@ -104,7 +104,7 @@ This repository provides a comprehensive setup for deploying Apache Airflow usin
     argocd app delete external-secrets --cascade
     kubectl delete namespace airflow
     kubectl delete namespace external-secrets
-    kubectl delete namesapce argocd
+    kubectl delete namespace argocd
     ```
 
 ## Extra Resources
